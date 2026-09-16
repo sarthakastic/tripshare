@@ -1,0 +1,60 @@
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">TripShare</p>
+    <h1>Where do you want to go next?</h1>
+    <p class="lede">
+      Discover destinations, check the weather, convert currency, and shape a trip you can actually take.
+    </p>
+    <app-destination-search submitLabel="Explore" (submitted)="search($event)" (selected)="openCountry($event)" />
+  </div>
+</section>
+
+<section class="section">
+  <header class="page-header">
+    <h2>Featured destinations</h2>
+    <p>A shortlist of places travelers keep coming back to.</p>
+  </header>
+  @if (loading()) {
+    <app-loading-state label="Loading featured destinations…" />
+  } @else if (error()) {
+    <app-error-state [message]="error()!" (retry)="loadFeatured()" />
+  } @else {
+    <div class="grid-cards">
+      @for (country of featured(); track country.code) {
+        <app-destination-card [country]="country" />
+      }
+    </div>
+  }
+</section>
+
+<section class="section">
+  <header class="page-header">
+    <h2>Explore by region</h2>
+    <p>Start with a part of the world, then refine your list.</p>
+  </header>
+  <div class="tool-grid">
+    @for (region of regions; track region.name) {
+      <a class="region-card surface-card" [routerLink]="['/explore']" [queryParams]="{ region: region.name }">
+        <mat-icon aria-hidden="true">{{ region.icon }}</mat-icon>
+        <h3>{{ region.name }}</h3>
+        <p>{{ region.description }}</p>
+      </a>
+    }
+  </div>
+</section>
+
+<section class="section">
+  <header class="page-header">
+    <h2>Travel tools</h2>
+    <p>Everything you need after you pick a destination.</p>
+  </header>
+  <div class="tool-grid">
+    @for (tool of tools; track tool.path) {
+      <a class="tool-card surface-card" [routerLink]="tool.path">
+        <mat-icon aria-hidden="true">{{ tool.icon }}</mat-icon>
+        <h3>{{ tool.title }}</h3>
+        <p>{{ tool.copy }}</p>
+      </a>
+    }
+  </div>
+</section>

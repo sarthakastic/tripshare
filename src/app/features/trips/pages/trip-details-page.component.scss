@@ -1,0 +1,47 @@
+.heading,
+.actions,
+.facts {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.heading {
+  justify-content: space-between;
+  align-items: start;
+}
+
+.dest {
+  color: var(--ts-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  margin: 0 0 0.35rem;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 1.5rem;
+}
+
+.facts article,
+.day {
+  padding: 1rem;
+}
+
+.itinerary {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.notes {
+  color: var(--ts-muted);
+  margin-top: -0.4rem;
+}
+
+@media (max-width: 800px) {
+  .facts {
+    grid-template-columns: 1fr;
+  }
+}

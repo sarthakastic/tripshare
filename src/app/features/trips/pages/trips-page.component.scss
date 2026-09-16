@@ -1,0 +1,19 @@
+.heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+  flex-wrap: wrap;
+}
+
+.trip h2,
+.trip p {
+  margin: 0 0 0.35rem;
+}
+
+.dest {
+  color: var(--ts-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+}

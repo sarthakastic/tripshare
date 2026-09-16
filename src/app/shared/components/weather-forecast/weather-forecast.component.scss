@@ -1,0 +1,39 @@
+.forecast {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.75rem;
+}
+
+.day {
+  padding: 0.9rem;
+  border-radius: calc(var(--ts-radius) - 4px);
+  border: 1px solid var(--ts-border);
+  background: var(--ts-surface);
+}
+
+.date,
+.range,
+.condition,
+.precip {
+  margin: 0;
+}
+
+.date {
+  font-size: 0.8rem;
+  color: var(--ts-muted);
+  margin-bottom: 0.35rem;
+}
+
+.range {
+  display: flex;
+  gap: 0.4rem;
+  align-items: baseline;
+  margin: 0.35rem 0;
+}
+
+.range span,
+.condition,
+.precip {
+  color: var(--ts-muted);
+  font-size: 0.85rem;
+}

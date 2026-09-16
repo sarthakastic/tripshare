@@ -1,0 +1,16 @@
+<div class="forecast" role="list">
+  @for (day of days(); track day.date) {
+    <article class="day" role="listitem">
+      <p class="date">{{ day.date | date: 'EEE d' }}</p>
+      <mat-icon [attr.aria-label]="day.condition">{{ day.icon }}</mat-icon>
+      <p class="range">
+        <strong>{{ day.maxTemperature | number: '1.0-0' }}°</strong>
+        <span>{{ day.minTemperature | number: '1.0-0' }}°</span>
+      </p>
+      <p class="condition">{{ day.condition }}</p>
+      @if (day.precipitationProbability !== null) {
+        <p class="precip">{{ day.precipitationProbability }}% precip.</p>
+      }
+    </article>
+  }
+</div>

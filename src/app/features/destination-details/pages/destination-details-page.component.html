@@ -1,0 +1,69 @@
+@if (loading()) {
+  <app-loading-state label="Loading destination details…" />
+} @else if (error()) {
+  <app-error-state [message]="error()!" [retryable]="false" />
+} @else if (view(); as details) {
+  <article class="overview surface-card">
+    <img [src]="details.country.flagPng" [alt]="details.country.flagAlt" />
+    <div>
+      <p class="eyebrow">{{ details.country.region }} · {{ details.country.subregion }}</p>
+      <h1>{{ details.country.name }}</h1>
+      <p class="official">{{ details.country.officialName }}</p>
+      <p>Capital: {{ details.country.capital }}</p>
+      <div class="actions">
+        <button matButton="filled" type="button" (click)="toggleWishlist()">
+          <mat-icon>{{ saved() ? 'favorite' : 'favorite_border' }}</mat-icon>
+          {{ saved() ? 'Saved' : 'Add to wishlist' }}
+        </button>
+        <a matButton="outlined" [routerLink]="['/trips/create']" [queryParams]="{ destination: details.country.code }">
+          Plan a trip
+        </a>
+        <a matButton="outlined" [routerLink]="['/budget']" [queryParams]="{ destination: details.country.name, currency: details.country.currencies[0]?.code }">
+          Calculate budget
+        </a>
+      </div>
+    </div>
+  </article>
+
+  <section class="facts">
+    <article class="surface-card">
+      <h2>Information</h2>
+      <dl>
+        <div><dt>Population</dt><dd>{{ details.country.population | number }} ({{ details.country.population | compactNumber }})</dd></div>
+        <div><dt>Area</dt><dd>{{ details.country.area | number }} km²</dd></div>
+        <div><dt>Languages</dt><dd>{{ details.country.languages.join(', ') || '—' }}</dd></div>
+        <div>
+          <dt>Currency</dt>
+          <dd>
+            @for (currency of details.country.currencies; track currency.code) {
+              <span>{{ currency.name }} ({{ currency.code }}{{ currency.symbol ? ' · ' + currency.symbol : '' }})</span>
+            } @empty {
+              —
+            }
+          </dd>
+        </div>
+        <div><dt>Timezones</dt><dd>{{ details.country.timezones.join(', ') || '—' }}</dd></div>
+      </dl>
+    </article>
+    <article class="surface-card">
+      <h2>Location</h2>
+      <p>Latitude {{ details.country.latitude | number: '1.2-2' }}</p>
+      <p>Longitude {{ details.country.longitude | number: '1.2-2' }}</p>
+      @if (details.country.mapsGoogle) {
+        <a matButton [href]="details.country.mapsGoogle" target="_blank" rel="noreferrer">Open in Google Maps</a>
+      }
+    </article>
+  </section>
+
+  <section class="weather">
+    <h2>Weather</h2>
+    @if (details.weather) {
+      <app-weather-card [weather]="details.weather.current" [location]="details.country.capital" />
+      <app-weather-forecast [days]="details.weather.daily" />
+    } @else {
+      <app-empty-state title="Weather unavailable" message="Current conditions could not be loaded for this location." icon="cloud_off" />
+    }
+  </section>
+} @else {
+  <app-empty-state title="Destination not found" message="Try another country from Explore." />
+}

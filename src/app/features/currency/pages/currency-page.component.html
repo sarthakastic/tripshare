@@ -1,0 +1,50 @@
+<section class="page-header">
+  <h1>Currency converter</h1>
+  <p>Convert a travel budget using latest available Frankfurter exchange rates.</p>
+</section>
+
+@if (listLoading()) {
+  <app-loading-state label="Loading currencies…" />
+} @else {
+  <form class="surface-card form" [formGroup]="form" (ngSubmit)="convert()">
+    <mat-form-field appearance="outline">
+      <mat-label>Amount</mat-label>
+      <input matInput type="number" formControlName="amount" min="0" />
+    </mat-form-field>
+    <div class="pair">
+      <mat-form-field appearance="outline">
+        <mat-label>From</mat-label>
+        <mat-select formControlName="from">
+          @for (currency of currencies(); track currency.code) {
+            <mat-option [value]="currency.code">{{ currency.code }} — {{ currency.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <button matIconButton type="button" aria-label="Swap currencies" (click)="swap()">
+        <mat-icon>swap_horiz</mat-icon>
+      </button>
+      <mat-form-field appearance="outline">
+        <mat-label>To</mat-label>
+        <mat-select formControlName="to">
+          @for (currency of currencies(); track currency.code) {
+            <mat-option [value]="currency.code">{{ currency.code }} — {{ currency.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button matButton="filled" type="submit" [disabled]="loading()">Convert</button>
+  </form>
+}
+
+@if (loading()) {
+  <app-loading-state label="Fetching exchange rate…" />
+} @else if (error()) {
+  <app-error-state [message]="error()!" (retry)="convert()" />
+} @else if (result(); as conversion) {
+  <article class="surface-card result">
+    <p>{{ conversion.amount | currency: conversion.from:'symbol-narrow':'1.0-2' }}</p>
+    <h2>{{ conversion.converted | currency: conversion.to:'symbol-narrow':'1.2-2' }}</h2>
+    <p>Rate: 1 {{ conversion.from }} = {{ conversion.rate | number: '1.2-4' }} {{ conversion.to }}</p>
+    <p>As of {{ conversion.date }}</p>
+  </article>
+}

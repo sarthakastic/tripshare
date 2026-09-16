@@ -1,0 +1,33 @@
+<section class="page-header heading">
+  <div>
+    <h1>Trip planner</h1>
+    <p>Create itineraries, keep budgets nearby, and reopen trips whenever you need them.</p>
+  </div>
+  <a matButton="filled" routerLink="/trips/create">
+    <mat-icon>add</mat-icon>
+    New trip
+  </a>
+</section>
+
+@if (trips().length === 0) {
+  <app-empty-state title="No trips yet" message="Start with a destination, dates, and a first day of activities." icon="luggage">
+    <a matButton="filled" routerLink="/trips/create">Create a trip</a>
+  </app-empty-state>
+} @else {
+  <div class="grid-cards">
+    @for (trip of trips(); track trip.id) {
+      <mat-card appearance="outlined" class="trip">
+        <mat-card-content>
+          <p class="dest">{{ trip.destinationName }}</p>
+          <h2>{{ trip.name }}</h2>
+          <p>{{ trip.startDate | date: 'mediumDate' }} – {{ trip.endDate | date: 'mediumDate' }}</p>
+          <p>{{ trip.travelers }} travelers · {{ trip.estimatedBudget | number }} {{ trip.currency }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <a matButton="filled" [routerLink]="['/trips', trip.id]">Open</a>
+          <a matButton [routerLink]="['/trips', trip.id, 'edit']">Edit</a>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+}

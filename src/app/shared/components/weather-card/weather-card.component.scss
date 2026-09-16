@@ -1,0 +1,57 @@
+.weather-card {
+  padding: 1.25rem;
+  border-radius: var(--ts-radius);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--ts-accent) 18%, var(--ts-surface)), var(--ts-surface));
+  border: 1px solid var(--ts-border);
+}
+
+.headline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.headline mat-icon {
+  font-size: 2.4rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  color: var(--ts-accent);
+}
+
+.location,
+h3,
+.temp,
+dl,
+dt,
+dd {
+  margin: 0;
+}
+
+.location {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  color: var(--ts-muted);
+}
+
+.temp {
+  font-size: 3rem;
+  font-weight: 650;
+  line-height: 1.1;
+  margin: 0.5rem 0 1rem;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.75rem;
+}
+
+dt {
+  color: var(--ts-muted);
+  font-size: 0.8rem;
+}
+
+dd {
+  font-weight: 600;
+}

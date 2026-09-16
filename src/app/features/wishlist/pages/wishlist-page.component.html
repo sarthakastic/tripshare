@@ -1,0 +1,27 @@
+<section class="page-header">
+  <h1>Wishlist</h1>
+  <p>Destinations you want to return to later. Saved on this device.</p>
+</section>
+
+@if (store.wishlist().length === 0) {
+  <app-empty-state title="Your wishlist is empty" message="Open a destination and save it while you explore." icon="favorite_border">
+    <a matButton="filled" routerLink="/explore">Explore destinations</a>
+  </app-empty-state>
+} @else {
+  <div class="grid-cards">
+    @for (item of store.wishlist(); track item.code) {
+      <mat-card appearance="outlined">
+        <img [src]="item.flagPng" [alt]="item.flagAlt" />
+        <mat-card-content>
+          <p>{{ item.region }}</p>
+          <h2>{{ item.name }}</h2>
+          <p>{{ item.capital }} · {{ item.population | number }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <a matButton="filled" [routerLink]="['/destinations', item.code]">View details</a>
+          <button matButton type="button" (click)="store.removeDestination(item.code)">Remove</button>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+}

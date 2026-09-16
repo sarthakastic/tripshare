@@ -1,0 +1,16 @@
+<mat-card class="card" appearance="outlined">
+  <img [src]="country().flagPng" [alt]="country().flagAlt" class="flag" width="320" height="180" />
+  <mat-card-content>
+    <p class="region">{{ country().region }}</p>
+    <h3>{{ country().name }}</h3>
+    <p class="meta">Capital: {{ country().capital }}</p>
+    <p class="meta">Population: {{ country().population | number }}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <a matButton="filled" [routerLink]="['/destinations', country().code]">View details</a>
+    <button matButton type="button" (click)="toggleWishlist()" [attr.aria-pressed]="saved()">
+      <mat-icon>{{ saved() ? 'favorite' : 'favorite_border' }}</mat-icon>
+      {{ saved() ? 'Saved' : 'Add to wishlist' }}
+    </button>
+  </mat-card-actions>
+</mat-card>

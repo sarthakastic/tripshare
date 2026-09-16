@@ -1,0 +1,25 @@
+<form class="search" (submit)="$event.preventDefault(); submit()">
+  <mat-form-field [appearance]="appearance()" class="field">
+    <mat-label>{{ placeholder() }}</mat-label>
+    <input
+      matInput
+      [formControl]="control"
+      [matAutocomplete]="auto"
+      [placeholder]="placeholder()"
+      aria-label="Search destinations"
+    />
+    <mat-icon matPrefix>search</mat-icon>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCountry" (optionSelected)="onSelected($event)">
+      @for (country of options(); track country.code) {
+        <mat-option [value]="country">
+          <span class="option">
+            <img [src]="country.flagPng" [alt]="" width="22" height="14" />
+            <span>{{ country.name }}</span>
+            <small>{{ country.capital }} · {{ country.region }}</small>
+          </span>
+        </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+  <button matButton="filled" type="submit">{{ submitLabel() }}</button>
+</form>

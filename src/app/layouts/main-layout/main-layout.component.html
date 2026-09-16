@@ -1,0 +1,62 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav
+    class="nav"
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="!isMobile()"
+    #sidenav
+    [fixedInViewport]="isMobile()"
+  >
+    <div class="brand">
+      <a routerLink="/" class="logo" (click)="isMobile() && sidenav.close()">
+        <mat-icon aria-hidden="true">public</mat-icon>
+        <span>
+          <strong>TripShare</strong>
+          <small>Explore. Plan. Experience.</small>
+        </span>
+      </a>
+    </div>
+    <mat-nav-list>
+      @for (link of links; track link.path) {
+        <a
+          mat-list-item
+          [routerLink]="link.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: link.exact }"
+          (click)="isMobile() && sidenav.close()"
+        >
+          <mat-icon matListItemIcon>{{ link.icon }}</mat-icon>
+          <span matListItemTitle>{{ link.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    @if (loading.active()) {
+      <mat-progress-bar mode="indeterminate" class="progress" aria-label="Loading" />
+    }
+    <mat-toolbar class="toolbar">
+      @if (isMobile()) {
+        <button matIconButton type="button" aria-label="Open navigation" (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+      <span class="toolbar-title">TripShare</span>
+      <span class="spacer"></span>
+      <a matIconButton routerLink="/wishlist" aria-label="Open wishlist">
+        <mat-icon [matBadge]="wishlist.count() || null" matBadgeSize="small" matBadgeColor="accent">favorite</mat-icon>
+      </a>
+      <button
+        matIconButton
+        type="button"
+        [attr.aria-label]="theme.mode() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+        (click)="theme.toggle()"
+      >
+        <mat-icon>{{ theme.mode() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+    </mat-toolbar>
+    <main class="content">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

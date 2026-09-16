@@ -1,0 +1,19 @@
+<section class="page-header">
+  <h1>Weather</h1>
+  <p>Choose a destination to see current conditions and a seven-day forecast.</p>
+</section>
+
+<app-destination-search submitLabel="Show weather" (selected)="selectCountry($event)" (submitted)="search($event)" />
+
+@if (facade.loading()) {
+  <app-loading-state label="Fetching forecast…" />
+} @else if (facade.error()) {
+  <app-error-state [message]="facade.error()!" [retryable]="false" />
+} @else if (facade.weather(); as weather) {
+  <div class="stack">
+    <app-weather-card [weather]="weather.current" [location]="facade.country()?.name ?? ''" />
+    <app-weather-forecast [days]="weather.daily" />
+  </div>
+} @else {
+  <app-empty-state title="Pick a destination" message="Search for a country to load live weather from Open-Meteo." icon="partly_cloudy_day" />
+}

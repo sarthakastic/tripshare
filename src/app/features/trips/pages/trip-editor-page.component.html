@@ -1,0 +1,120 @@
+<section class="page-header">
+  <h1>{{ tripId() ? 'Edit trip' : 'Create trip' }}</h1>
+  <p>Set the destination, dates, budget, and a day-by-day itinerary.</p>
+</section>
+
+<form class="form" [formGroup]="form" (ngSubmit)="submit()">
+  <div class="surface-card block">
+    <h2>Trip details</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Trip name</mat-label>
+      <input matInput formControlName="name" required />
+      @if (fieldError('name')) {
+        <mat-error>{{ fieldError('name') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <p class="hint">Destination</p>
+    <app-destination-search submitLabel="Use destination" (selected)="chooseDestination($event)" />
+    <p class="selected">Selected: {{ form.controls.destinationName.value || 'None yet' }}</p>
+    @if (form.controls.destinationName.touched && form.controls.destinationName.invalid) {
+      <p class="error">Choose a destination from search results.</p>
+    }
+
+    <div class="dates">
+      <mat-form-field appearance="outline">
+        <mat-label>Start date</mat-label>
+        <input matInput [matDatepicker]="start" formControlName="startDate" />
+        <mat-datepicker-toggle matIconSuffix [for]="start" />
+        <mat-datepicker #start />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>End date</mat-label>
+        <input matInput [matDatepicker]="end" formControlName="endDate" />
+        <mat-datepicker-toggle matIconSuffix [for]="end" />
+        <mat-datepicker #end />
+      </mat-form-field>
+    </div>
+    @if (dateError()) {
+      <p class="error">{{ dateError() }}</p>
+    }
+
+    <div class="dates">
+      <mat-form-field appearance="outline">
+        <mat-label>Travelers</mat-label>
+        <input matInput type="number" formControlName="travelers" min="1" />
+        @if (fieldError('travelers')) {
+          <mat-error>{{ fieldError('travelers') }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Estimated budget</mat-label>
+        <input matInput type="number" formControlName="estimatedBudget" min="0" />
+        @if (fieldError('estimatedBudget')) {
+          <mat-error>{{ fieldError('estimatedBudget') }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Currency</mat-label>
+        <input matInput formControlName="currency" maxlength="3" />
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Notes</mat-label>
+      <textarea matInput rows="3" formControlName="notes"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="surface-card block" formArrayName="days">
+    <div class="itinerary-head">
+      <h2>Itinerary</h2>
+      <button matButton type="button" (click)="addDay()">
+        <mat-icon>add</mat-icon>
+        Add day
+      </button>
+    </div>
+
+    @for (day of days.controls; track day.controls.id.value; let dayIndex = $index) {
+      <section class="day" [formGroup]="day">
+        <div class="itinerary-head">
+          <mat-form-field appearance="outline">
+            <mat-label>Day label</mat-label>
+            <input matInput formControlName="label" />
+          </mat-form-field>
+          <button matIconButton type="button" aria-label="Remove day" (click)="removeDay(dayIndex)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+
+        <div class="activities" formArrayName="activities" cdkDropList (cdkDropListDropped)="dropActivity(day, $event)">
+          @for (activity of day.controls.activities.controls; track activity.controls.id.value; let activityIndex = $index) {
+            <div class="activity" [formGroup]="activity" cdkDrag>
+              <mat-icon cdkDragHandle class="handle" aria-label="Reorder activity">drag_indicator</mat-icon>
+              <mat-form-field appearance="outline">
+                <mat-label>Time</mat-label>
+                <input matInput type="time" formControlName="time" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Activity</mat-label>
+                <input matInput formControlName="title" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Notes</mat-label>
+                <input matInput formControlName="notes" />
+              </mat-form-field>
+              <button matIconButton type="button" aria-label="Remove activity" (click)="removeActivity(day, activityIndex)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+        <button matButton type="button" (click)="addActivity(day)">Add activity</button>
+      </section>
+    }
+  </div>
+
+  <button matButton="filled" type="submit" [disabled]="saving()">
+    {{ saving() ? 'Saving…' : 'Save trip' }}
+  </button>
+</form>

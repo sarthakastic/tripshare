@@ -1,0 +1,77 @@
+<section class="page-header">
+  <h1>Budget calculator</h1>
+  <p>Estimate accommodation, food, and activities, then convert the total into other currencies.</p>
+</section>
+
+<form class="layout" [formGroup]="form">
+  <section class="surface-card form">
+    <mat-form-field appearance="outline">
+      <mat-label>Destination</mat-label>
+      <input matInput formControlName="destination" />
+    </mat-form-field>
+    <div class="split">
+      <mat-form-field appearance="outline">
+        <mat-label>Number of days</mat-label>
+        <input matInput type="number" formControlName="days" min="1" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Travelers</mat-label>
+        <input matInput type="number" formControlName="travelers" min="1" />
+      </mat-form-field>
+    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Accommodation per day</mat-label>
+      <input matInput type="number" formControlName="accommodationPerDay" min="0" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Food per day</mat-label>
+      <input matInput type="number" formControlName="foodPerDay" min="0" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Transportation</mat-label>
+      <input matInput type="number" formControlName="transportation" min="0" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Activities</mat-label>
+      <input matInput type="number" formControlName="activities" min="0" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Other expenses</mat-label>
+      <input matInput type="number" formControlName="other" min="0" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Currency</mat-label>
+      <input matInput formControlName="currency" maxlength="3" />
+    </mat-form-field>
+  </section>
+
+  <aside class="results">
+    <article class="surface-card">
+      <h2>Totals</h2>
+      <p>Accommodation {{ result().accommodationTotal | number: '1.0-0' }}</p>
+      <p>Food {{ result().foodTotal | number: '1.0-0' }}</p>
+      <p>Transportation {{ result().transportation | number: '1.0-0' }}</p>
+      <p>Activities {{ result().activities | number: '1.0-0' }}</p>
+      <p>Other {{ result().other | number: '1.0-0' }}</p>
+      <p class="total">Total {{ result().total | currency: form.controls.currency.value }}</p>
+      <p>Per person {{ result().perPerson | currency: form.controls.currency.value }}</p>
+      <p>Per day {{ result().perDay | currency: form.controls.currency.value }}</p>
+    </article>
+    <article class="surface-card chart">
+      <h2>Breakdown</h2>
+      <canvas baseChart type="doughnut" [data]="chartData()" [legend]="true"></canvas>
+    </article>
+    <article class="surface-card">
+      <h2>Convert total</h2>
+      <button matButton="filled" type="button" (click)="convert()" [disabled]="converting()">Show USD, EUR, JPY, GBP</button>
+      @if (conversionError()) {
+        <p class="error">{{ conversionError() }}</p>
+      }
+      @for (code of targets; track code) {
+        @if (conversions()[code] !== undefined) {
+          <p>{{ conversions()[code] | currency: code }}</p>
+        }
+      }
+    </article>
+  </aside>
+</form>
