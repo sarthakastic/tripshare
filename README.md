@@ -40,7 +40,15 @@ Open `http://localhost:4200/`.
 npm run build
 ```
 
-Build output is written to `dist/`.
+Build output is written to `dist/tripshare/browser`.
+
+## Deploy on Vercel
+
+1. Open [vercel.com/new](https://vercel.com/new) and import `sarthakastic/tripshare`.
+2. Leave the defaults. `vercel.json` already sets the build command, install command, and output directory.
+3. Deploy. Client routes such as `/explore` and `/trips` rewrite to `index.html`.
+
+The Vercel project needs Node.js 22. TripShare has no backend; the static build is enough.
 
 ## Tests
 
